@@ -15,7 +15,7 @@ export function Dashboard() {
   return (
     <div className="min-h-screen">
       <DashboardHeader />
-      <main className="pt-14">
+      <main style={{ paddingTop: "calc(env(safe-area-inset-top) + 3.5rem)" }}>
         <div className="max-w-7xl mx-auto px-4 py-6">
 
           {/* Hero card */}

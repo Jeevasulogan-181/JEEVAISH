@@ -1,0 +1,14 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+  </defs>
+  <!-- Full-bleed background: the OS applies its own mask shape (circle/squircle/etc),
+       so keep all meaningful content inside the ~80% safe-zone center. -->
+  <rect width="512" height="512" fill="#050510"/>
+  <rect x="96" y="96" width="320" height="320" rx="64" fill="url(#g)"/>
+  <path d="M256 336c-4 0-9-2-12-4-17-14-33-27-47-42-19-20-33-42-33-66 0-27 21-49 48-49 17 0 32 9 44 24 12-15 27-24 44-24 27 0 48 22 48 49 0 24-14 46-33 66-14 15-30 28-47 42-3 2-8 4-12 4z" fill="#ffffff"/>
+</svg>
