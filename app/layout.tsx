@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Syne } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { AuthProvider } from '@/lib/auth-context'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -19,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${syne.variable}`}>
       <body className="font-sans antialiased bg-[#050510] text-[#e8e8f0] min-h-screen overflow-x-hidden">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
         <Analytics />
       </body>
     </html>

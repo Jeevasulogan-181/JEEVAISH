@@ -54,8 +54,11 @@ npm install
 npm run dev
 ```
 
-Login: husband / JEEVASULOGANENTHARA@1031
-Login: wife    / JEEVASULOGANENTHARA@1031
+Login: husband / ChangeMe@123
+Login: wife    / ChangeMe@123
+
+⚠️ These are dummy placeholder credentials — change the passwords in
+`supabase/create-users.sql` (or `scripts/seed-users.ts`) before real use.
 
 ---
 

@@ -1,7 +1,8 @@
 /**
  * scripts/seed-users.ts
  *
- * Creates JEEVA (husband) and VAISHNEVI (wife) in Supabase Auth + profiles table.
+ * Creates the two couple accounts (husband/wife) in Supabase Auth + profiles table.
+ * Ships with dummy placeholder credentials — change them before real use.
  *
  * HOW TO RUN:
  *   1. Add your service_role key to .env.local:
@@ -43,8 +44,8 @@ const admin = createClient(SUPABASE_URL, SERVICE_KEY, {
 })
 
 const USERS = [
-  { username: "husband", displayName: "JEEVA",    email: "husband@cosmicus.app", password: "JEEVASULOGANENTHARA@1031" },
-  { username: "wife",    displayName: "VAISHNEVI", email: "wife@cosmicus.app",    password: "JEEVASULOGANENTHARA@1031" },
+  { username: "husband", displayName: "Partner A", email: "husband@cosmicus.app", password: "ChangeMe@123" },
+  { username: "wife",    displayName: "Partner B", email: "wife@cosmicus.app",    password: "ChangeMe@123" },
 ]
 
 async function run() {
@@ -94,8 +95,9 @@ async function run() {
   }
 
   console.log("\n🎉  All done!")
-  console.log("    husband / JEEVASULOGANENTHARA@1031  →  JEEVA")
-  console.log("    wife    / JEEVASULOGANENTHARA@1031  →  VAISHNEVI")
+  console.log("    husband / ChangeMe@123  →  Partner A")
+  console.log("    wife    / ChangeMe@123  →  Partner B")
+  console.log("\n⚠️  These are dummy credentials — change the passwords before real use.")
 }
 
 run().catch(console.error)

@@ -1,6 +1,9 @@
 -- =====================================================================
 -- CosmicUs — Create Users
 -- Run in: Supabase Dashboard → SQL Editor → New query → Run
+--
+-- NOTE: Ships with dummy placeholder credentials (ChangeMe@123).
+-- Change the passwords before real use.
 -- =====================================================================
 
 DO $$
@@ -9,7 +12,7 @@ DECLARE
   wife_id    UUID;
 BEGIN
 
-  -- ── JEEVA (husband) ────────────────────────────────────────────────
+  -- ── Partner A (husband) ────────────────────────────────────────────────
 
   -- Check if already exists
   SELECT id INTO husband_id
@@ -30,7 +33,7 @@ BEGIN
       husband_id,
       '00000000-0000-0000-0000-000000000000',
       'husband@cosmicus.app',
-      crypt('JEEVASULOGANENTHARA@1031', gen_salt('bf')),
+      crypt('ChangeMe@123', gen_salt('bf')),
       NOW(), 'authenticated', 'authenticated',
       NOW(), NOW(),
       '{"provider":"email","providers":["email"]}', '{}',
@@ -40,7 +43,7 @@ BEGIN
   ELSE
     -- Already exists — just reset password
     UPDATE auth.users
-    SET encrypted_password = crypt('JEEVASULOGANENTHARA@1031', gen_salt('bf')),
+    SET encrypted_password = crypt('ChangeMe@123', gen_salt('bf')),
         email_confirmed_at = NOW(),
         updated_at = NOW()
     WHERE id = husband_id;
@@ -62,11 +65,11 @@ BEGIN
 
   -- Profile row
   INSERT INTO public.profiles (id, username, display_name)
-  VALUES (husband_id, 'husband', 'JEEVA')
-  ON CONFLICT (id) DO UPDATE SET username = 'husband', display_name = 'JEEVA';
+  VALUES (husband_id, 'husband', 'Partner A')
+  ON CONFLICT (id) DO UPDATE SET username = 'husband', display_name = 'Partner A';
 
 
-  -- ── VAISHNEVI (wife) ───────────────────────────────────────────────
+  -- ── Partner B (wife) ───────────────────────────────────────────────
 
   SELECT id INTO wife_id
   FROM auth.users
@@ -85,7 +88,7 @@ BEGIN
       wife_id,
       '00000000-0000-0000-0000-000000000000',
       'wife@cosmicus.app',
-      crypt('JEEVASULOGANENTHARA@1031', gen_salt('bf')),
+      crypt('ChangeMe@123', gen_salt('bf')),
       NOW(), 'authenticated', 'authenticated',
       NOW(), NOW(),
       '{"provider":"email","providers":["email"]}', '{}',
@@ -94,7 +97,7 @@ BEGIN
     RAISE NOTICE 'Created wife auth user: %', wife_id;
   ELSE
     UPDATE auth.users
-    SET encrypted_password = crypt('JEEVASULOGANENTHARA@1031', gen_salt('bf')),
+    SET encrypted_password = crypt('ChangeMe@123', gen_salt('bf')),
         email_confirmed_at = NOW(),
         updated_at = NOW()
     WHERE id = wife_id;
@@ -114,8 +117,8 @@ BEGIN
   ) ON CONFLICT (provider, provider_id) DO NOTHING;
 
   INSERT INTO public.profiles (id, username, display_name)
-  VALUES (wife_id, 'wife', 'VAISHNEVI')
-  ON CONFLICT (id) DO UPDATE SET username = 'wife', display_name = 'VAISHNEVI';
+  VALUES (wife_id, 'wife', 'Partner B')
+  ON CONFLICT (id) DO UPDATE SET username = 'wife', display_name = 'Partner B';
 
 
 END $$;
