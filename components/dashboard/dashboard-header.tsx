@@ -18,7 +18,7 @@ export function DashboardHeader() {
             </div>
             <Sparkles className="absolute -top-1 -right-1 w-3 h-3 text-[#f472b6] animate-pulse" />
           </div>
-          <span className="font-serif font-bold text-lg cosmic-gradient-text hidden sm:block">CosmicUs</span>
+          <span className="font-serif font-bold text-lg cosmic-gradient-text hidden sm:block">JEEVAISHNEVI</span>
         </div>
 
         {/* Status */}

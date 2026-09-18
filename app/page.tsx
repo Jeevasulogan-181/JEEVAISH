@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useAuth } from "@/lib/auth-context"
+import { useAuth, AuthProvider } from "@/lib/auth-context"
 import { CosmicBackground } from "@/components/cosmic-background"
 import { LoginPage } from "@/components/login-page"
 import { Dashboard } from "@/components/dashboard/dashboard"
@@ -33,9 +33,9 @@ function AppContent() {
 
 export default function Home() {
   return (
-    <>
+    <AuthProvider>
       <CosmicBackground />
       <AppContent />
-    </>
+    </AuthProvider>
   )
 }

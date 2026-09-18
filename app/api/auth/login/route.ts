@@ -1,7 +1,8 @@
 // POST /api/auth/login
 import { NextRequest, NextResponse } from "next/server"
-import { getProfileByUsername, verifyPassword } from "@/lib/local-db"
-import { signAccessToken, signRefreshToken } from "@/lib/local-auth"
+import { createClient } from "@supabase/supabase-js"
+
+function toEmail(u: string) { return `${u.toLowerCase().trim()}@cosmicus.app` }
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,22 +10,35 @@ export async function POST(req: NextRequest) {
     if (!username || !password)
       return NextResponse.json({ error: "Username and password required" }, { status: 400 })
 
-    const profile = getProfileByUsername(username)
-    if (!profile || !verifyPassword(profile, password))
+    const sb = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    )
+
+    const { data, error } = await sb.auth.signInWithPassword({
+      email: toEmail(username),
+      password,
+    })
+
+    if (error || !data.session)
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 })
 
-    const { token, expiresAt } = signAccessToken(profile.id)
-    const refreshToken = signRefreshToken(profile.id)
+    const { data: profile } = await sb
+      .from("profiles")
+      .select("id, username, display_name, avatar_url")
+      .eq("id", data.user.id)
+      .single()
 
+    // Return both access token and refresh token
     return NextResponse.json({
-      token,
-      refreshToken,
-      expiresAt,
+      token:        data.session.access_token,
+      refreshToken: data.session.refresh_token,
+      expiresAt:    data.session.expires_at,
       user: {
-        id: profile.id,
-        username: profile.username,
-        displayName: profile.display_name,
-        avatarUrl: profile.avatar_url,
+        id:          data.user.id,
+        username:    profile?.username ?? username,
+        displayName: profile?.display_name ?? username.toUpperCase(),
+        avatarUrl:   profile?.avatar_url ?? null,
       },
     })
   } catch (e) {

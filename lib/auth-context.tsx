@@ -5,6 +5,7 @@ import {
   useCallback, useRef, type ReactNode,
 } from "react"
 import { apiLogin, apiLogout, setToken, getToken } from "./api-client"
+import { getSupabase } from "./supabase"
 
 export interface AuthUser {
   id: string
@@ -73,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null)
     setUser(null)
     localStorage.removeItem(USER_KEY)
+    try { await getSupabase().auth.signOut() } catch { /* ignore */ }
   }, [])
 
   return (
