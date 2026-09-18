@@ -59,7 +59,7 @@ export function Dashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
             {/* Left: Chat */}
             <div className={`lg:col-span-5 xl:col-span-4 transition-all duration-700 delay-100 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-              <div className="lg:sticky lg:top-20 h-[calc(100vh-6rem)]">
+              <div className="lg:sticky lg:top-20 lg:h-[calc(100vh-6rem)]">
                 <ChatBox />
               </div>
             </div>

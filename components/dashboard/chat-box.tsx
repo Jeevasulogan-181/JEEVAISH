@@ -175,7 +175,7 @@ export function ChatBox() {
   const fmtTime = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 
   return (
-    <div className="cosmic-card rounded-3xl flex flex-col h-150 overflow-hidden">
+    <div className="cosmic-card rounded-3xl flex flex-col h-[min(37.5rem,70vh)] lg:h-150 overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-3 p-5 pb-4 border-b border-white/5">
         <div className="w-8 h-8 rounded-xl bg-linear-to-br from-[#6366f1] to-[#f472b6] flex items-center justify-center">
