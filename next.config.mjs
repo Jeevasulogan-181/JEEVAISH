@@ -4,14 +4,9 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
+    // Uploaded media is served locally from /uploads (public/uploads/...),
+    // so no remote image patterns are needed.
     unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "*.supabase.co",
-        pathname: "/storage/v1/object/public/**",
-      },
-    ],
   },
 }
 

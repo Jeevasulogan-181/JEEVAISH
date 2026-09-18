@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server"
 
 // Minimal middleware — just passes requests through.
-// Session refresh is handled client-side by @supabase/supabase-js autoRefreshToken.
+// Auth is fully local: access-token refresh is handled client-side in lib/api-client.ts.
 export function middleware(request: NextRequest) {
   return NextResponse.next()
 }

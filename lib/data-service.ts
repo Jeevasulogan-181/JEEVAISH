@@ -1,9 +1,9 @@
 /**
  * lib/data-service.ts
  *
- * All data access goes through the API layer (/api/...).
- * No direct Supabase calls from the browser.
- * Realtime still uses Supabase WebSocket (it's a subscription, not a write).
+ * All data access goes through the API layer (/api/...) — a fully local
+ * Next.js backend, no cloud services involved. "Live updates" are done by
+ * short polling instead of a websocket subscription.
  */
 
 import {
@@ -12,7 +12,8 @@ import {
   apiGetMovies, apiAddMovie, apiUpdateMovie, apiDeleteMovie,
   apiGetMovieSync, apiSetMovieSync,
 } from "./api-client"
-import { getSupabase } from "./supabase"
+
+const POLL_INTERVAL = 3000
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -91,21 +92,33 @@ export async function deleteMessage(id: string): Promise<void> {
   await apiDeleteMessage(id)
 }
 
+/**
+ * Polls for message changes instead of a websocket subscription.
+ * Diffs against the last snapshot to fire insert/update/delete callbacks.
+ */
 export function subscribeToMessages(
   onInsert: (msg: Message) => void,
   onUpdate: (msg: Message) => void,
   onDelete: (id: string) => void,
 ): () => void {
-  const channel = getSupabase()
-    .channel("realtime:messages")
-    .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" },
-      (p) => onInsert(p.new as Message))
-    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "messages" },
-      (p) => onUpdate(p.new as Message))
-    .on("postgres_changes", { event: "DELETE", schema: "public", table: "messages" },
-      (p) => onDelete((p.old as any).id))
-    .subscribe()
-  return () => { getSupabase().removeChannel(channel) }
+  let last = new Map<string, Message>()
+  const tick = async () => {
+    const current = await getMessages()
+    const currentMap = new Map(current.map((m) => [m.id, m]))
+
+    for (const [id, msg] of currentMap) {
+      const prev = last.get(id)
+      if (!prev) onInsert(msg)
+      else if (prev.text !== msg.text || prev.edited_at !== msg.edited_at) onUpdate(msg)
+    }
+    for (const id of last.keys()) {
+      if (!currentMap.has(id)) onDelete(id)
+    }
+    last = currentMap
+  }
+  tick()
+  const interval = setInterval(tick, POLL_INTERVAL)
+  return () => clearInterval(interval)
 }
 
 // ── GALLERY ───────────────────────────────────────────────────────────────────
@@ -131,11 +144,8 @@ export async function deleteGalleryItem(id: string): Promise<void> {
 }
 
 export function subscribeToGallery(onChange: () => void): () => void {
-  const channel = getSupabase()
-    .channel("realtime:gallery")
-    .on("postgres_changes", { event: "*", schema: "public", table: "gallery_items" }, onChange)
-    .subscribe()
-  return () => { getSupabase().removeChannel(channel) }
+  const interval = setInterval(onChange, POLL_INTERVAL)
+  return () => clearInterval(interval)
 }
 
 // ── MOVIES ────────────────────────────────────────────────────────────────────
@@ -164,11 +174,8 @@ export async function deleteMovie(id: string): Promise<void> {
 }
 
 export function subscribeToMovies(onChange: () => void): () => void {
-  const channel = getSupabase()
-    .channel("realtime:movies")
-    .on("postgres_changes", { event: "*", schema: "public", table: "movies" }, onChange)
-    .subscribe()
-  return () => { getSupabase().removeChannel(channel) }
+  const interval = setInterval(onChange, POLL_INTERVAL)
+  return () => clearInterval(interval)
 }
 
 // ── MOVIE SYNC ────────────────────────────────────────────────────────────────
@@ -196,12 +203,9 @@ export async function setMovieSyncState(
 export function subscribeToMovieSync(
   onChange: (sync: MovieSyncState | null) => void,
 ): () => void {
-  const channel = getSupabase()
-    .channel("realtime:movie_sync")
-    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "movie_sync" },
-      async () => { onChange(await getMovieSyncState()) })
-    .subscribe()
-  return () => { getSupabase().removeChannel(channel) }
+  const tick = async () => onChange(await getMovieSyncState())
+  const interval = setInterval(tick, POLL_INTERVAL)
+  return () => clearInterval(interval)
 }
 
 // ── QUOTES (static) ───────────────────────────────────────────────────────────

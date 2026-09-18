@@ -8,3 +8,11 @@ node_modules/
 .next/
 .env*.local
 .DS_Store
+*.tsbuildinfo
+
+# Local app data — this is a fully local app; none of this should ever
+# be committed. Run `npm run reset` to wipe it.
+/data/db.json
+/data/*.corrupt-*.bak
+/public/uploads/*/*
+!/public/uploads/*/.gitkeep
