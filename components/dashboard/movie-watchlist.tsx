@@ -144,7 +144,7 @@ export function MovieWatchlist() {
   )
 
   return (
-    <div className="cosmic-card rounded-3xl flex flex-col max-h-[600px] overflow-hidden">
+    <div className="cosmic-card rounded-3xl flex flex-col h-full overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between p-5 pb-4 border-b border-white/5 shrink-0">
         <div className="flex items-center gap-3">

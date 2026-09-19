@@ -6,7 +6,7 @@ import {
   getMessages, saveMessage, updateMessage, deleteMessage, type Message,
 } from "@/lib/data-service"
 import {
-  Send, Heart, MessageCircle, Smile, ImagePlus, X,
+  Send, Heart, Smile, ImagePlus, X,
   Play, Pencil, Trash2, Maximize2,
 } from "lucide-react"
 
@@ -175,18 +175,7 @@ export function ChatBox() {
   const fmtTime = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 
   return (
-    <div className="cosmic-card rounded-3xl flex flex-col h-[min(37.5rem,70vh)] lg:h-150 overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center gap-3 p-5 pb-4 border-b border-white/5">
-        <div className="w-8 h-8 rounded-xl bg-linear-to-br from-[#6366f1] to-[#f472b6] flex items-center justify-center">
-          <MessageCircle className="w-4 h-4 text-white" />
-        </div>
-        <div>
-          <h3 className="font-serif text-base font-semibold text-foreground">Our Chat</h3>
-          <p className="text-xs text-muted-foreground">Live & private ✨</p>
-        </div>
-      </div>
-
+    <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && (

@@ -4,7 +4,8 @@ import { useEffect, useState } from "react"
 import { useAuth } from "@/lib/auth-context"
 import { CosmicBackground } from "@/components/cosmic-background"
 import { LoginPage } from "@/components/login-page"
-import { Dashboard } from "@/components/dashboard/dashboard"
+import { AppShell } from "@/components/dashboard/app-shell"
+import { ChatBox } from "@/components/dashboard/chat-box"
 import { Spinner } from "@/components/ui/spinner"
 
 function AppContent() {
@@ -28,7 +29,13 @@ function AppContent() {
     )
   }
 
-  return user ? <Dashboard /> : <LoginPage />
+  if (!user) return <LoginPage />
+
+  return (
+    <AppShell title="Chat">
+      <ChatBox />
+    </AppShell>
+  )
 }
 
 export default function Home() {
